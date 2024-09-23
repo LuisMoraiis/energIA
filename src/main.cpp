@@ -1,24 +1,21 @@
-#include <Arduino.h>
-#include "EmonLib.h"
 #include "storage.h"
+#include "lcd.h"
+#include "sct.h"
 
-EnergyMonitor emon1;
 
-const int analogPin = 1;
-const float calibration = 29;
-const int network = 220;
-const int sdPin;
+#define REDE 220.0
+#define PINO_SCT 1
+ 
 void setup(){
-
-  Serial.begin(9600);
-  initializerSD(sdPin);
-  emon1.current(analogPin, calibration);
-
-}
-
+  Serial.begin(9600);   
+  initializerLcd();
+  emon1.current(PINO_SCT, 29);
+} 
+  
 void loop(){
-
-  double irms = emon1.calcIrms(1480);
-  double power = irms * network;
+  double Irms = calc_irms();
+  double power = calc_power(Irms, REDE);
+  printLcd(Irms, power);
+  delay(1000);
 }
 
